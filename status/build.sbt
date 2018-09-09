@@ -1,9 +1,5 @@
 import sbtcrossproject.{crossProject, CrossType}
 
-resolvers += Resolver.bintrayRepo("cibotech", "public")
-
-libraryDependencies += "com.cibo" %%% "leaflet-facade_sjs0.6" % "1.1.0"
-
 lazy val server = (project in file("server")).settings(commonSettings).settings(
   scalaJSProjects := Seq(client),
   pipelineStages in Assets := Seq(scalaJSPipeline),
@@ -12,6 +8,7 @@ lazy val server = (project in file("server")).settings(commonSettings).settings(
   compile in Compile := ((compile in Compile) dependsOn scalaJSPipeline).value,
   libraryDependencies ++= Seq(
     "com.vmunier" %% "scalajs-scripts" % "1.1.2",
+    "javax.xml.bind" % "jaxb-api" % "2.3.0",
     guice,
     specs2 % Test
   ),
@@ -20,10 +17,13 @@ lazy val server = (project in file("server")).settings(commonSettings).settings(
 ).enablePlugins(PlayScala).
   dependsOn(sharedJvm)
 
-lazy val client = (project in file("client")).settings(commonSettings).settings(
+lazy val client = (project in file("client")).settings(commonSettings)
+    .settings(extraResolvers)
+    .settings(
   scalaJSUseMainModuleInitializer := true,
   libraryDependencies ++= Seq(
-    "org.scala-js" %%% "scalajs-dom" % "0.9.5"
+    "org.scala-js" %%% "scalajs-dom" % "0.9.5",
+    "com.cibo" %% "leaflet-facade_sjs0.6" % "1.1.0" % "compile"  withSources(),
   )
 ).enablePlugins(ScalaJSPlugin, ScalaJSWeb).
   dependsOn(sharedJs)
@@ -35,9 +35,13 @@ lazy val shared = crossProject(JSPlatform, JVMPlatform)
 lazy val sharedJvm = shared.jvm
 lazy val sharedJs = shared.js
 
+lazy val extraResolvers = Seq(
+  resolvers += Resolver.bintrayRepo("cibotech", "public"),
+)
+
 lazy val commonSettings = Seq(
   scalaVersion := "2.12.5",
-  organization := "com.regularoddity"
+  organization := "com.regularoddity",
 )
 
 

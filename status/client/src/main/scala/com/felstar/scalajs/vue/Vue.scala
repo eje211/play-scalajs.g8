@@ -10,9 +10,10 @@ import scala.scalajs.js
 import org.scalajs.dom
 import org.scalajs.dom._
 
-import js.annotation.JSName
+import js.annotation.{JSGlobal, JSName}
 
 @js.native
+@JSGlobal
 class Vue extends js.Object {
   def this(obj: js.Any) = this()
 
@@ -106,11 +107,13 @@ class Vue extends js.Object {
 }
 
 @js.native
+@JSGlobal
 class Unwatch extends js.Object {
   def unwatch: Unit = js.native
 }
 
 @js.native
+@JSGlobal
 object Vue extends js.Object {
   def config: js.Dynamic = js.native
 
@@ -154,6 +157,7 @@ object Vue extends js.Object {
 }
 
 @js.native
+@JSGlobal
 class Directive extends js.Object {
   val name: String = js.native
   val rawName: String = js.native

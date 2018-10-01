@@ -4,8 +4,8 @@ import scala.scalajs.js
 import scala.scalajs.js.annotation.JSGlobal
 
 
-@JSGlobal("L")
 @js.native
+@JSGlobal("L.CRS")
 class CRS extends js.Object {
 
   def latLngToPoint(latLng: LatLng, zoon: Number): Point = js.native
@@ -35,12 +35,7 @@ class CRS extends js.Object {
   def wrapLat: Array[Number] = js.native
 
   def infinite: Boolean = js.native
-}
 
-
-@JSGlobal("L.CRS")
-@js.native
-object CRS extends js.Object {
   def Earth: CRS = js.native
   def EPSG3395: CRS = js.native
   def EPSG3857: CRS = js.native
@@ -48,3 +43,7 @@ object CRS extends js.Object {
   def Base: CRS = js.native
   def Simple: CRS = js.native
 }
+
+@js.native
+@JSGlobal("L.CRS")
+object CRS extends CRS

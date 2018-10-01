@@ -7,10 +7,10 @@
 package com.felstar.scalajs.vue
 
 import scala.scalajs.js
-import org.scalajs.dom
 import org.scalajs.dom._
 
 import js.annotation.{JSGlobal, JSName}
+
 
 @js.native
 @JSGlobal
@@ -113,7 +113,7 @@ class Unwatch extends js.Object {
 }
 
 @js.native
-@JSGlobal
+@JSGlobal("Vue")
 object Vue extends js.Object {
   def config: js.Dynamic = js.native
 

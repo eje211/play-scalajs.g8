@@ -1,7 +1,6 @@
 package com.regularoddity.status.controllers
 
 import javax.inject._
-
 import com.regularoddity.status.shared.SharedMessages
 import play.api.mvc._
 
@@ -12,3 +11,4 @@ import play.api.mvc._
       Ok(views.html.index(SharedMessages.itWorks))
     }
   }
+// target/scala-2.12/client-jsdeps.js

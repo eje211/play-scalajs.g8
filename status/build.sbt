@@ -10,6 +10,7 @@ lazy val server = (project in file("server")).settings(commonSettings).settings(
   libraryDependencies ++= Seq(
     "com.vmunier" %% "scalajs-scripts" % "1.1.2",
     "javax.xml.bind" % "jaxb-api" % "2.3.0",
+    "org.reactivemongo" %% "play2-reactivemongo" % "0.15.1-play26",
     guice,
     specs2 % Test
   ),

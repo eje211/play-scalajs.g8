@@ -17,7 +17,7 @@ object Status extends Enumeration {
 
 import Status._
 
-case class Employee(
+ class Employee(
                 firstName: String,
                 lastName: String,
                 displayName: String,
@@ -30,7 +30,7 @@ case class Employee(
                 mapLocation: (Double, Double),
                 status: Status,
                 active: Boolean,
-                message: String,
+                message: Option[String],
                 nickname: String,
                 role: Role,
                 visible: Boolean,

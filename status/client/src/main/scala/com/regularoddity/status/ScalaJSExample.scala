@@ -5,7 +5,6 @@ import org.scalajs._
 import com.felstar.scalajs.vue._
 
 import scala.scalajs.js
-import scala.scalajs.js.Dynamic.literal
 import com.cibo.leaflet._
 
 object ScalaJSExample {

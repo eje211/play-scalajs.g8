@@ -4,6 +4,9 @@
 
 # Home page
 GET        /                             com.regularoddity.status.controllers.Application.index
+# REST data
+GET        /data                         com.regularoddity.status.controllers.GetData.get
+GET        /new                          com.regularoddity.status.controllers.GetData.makeNew
 
 # Prefix must match `play.assets.urlPrefix`
 GET        /assets/*file                 controllers.Assets.at(file)

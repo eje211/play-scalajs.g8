@@ -1,11 +1,11 @@
 package com.regularoddity.status.shared
 
-import java.net.URL
+import java.net.URI
 import java.time.LocalDate
 
 object Role extends Enumeration {
   type Role = Value
-  val employee, editor, admid = Value
+  val employee, editor, admin = Value
 }
 
 import Role.Role
@@ -17,21 +17,24 @@ object Status extends Enumeration {
 
 import Status.Status
 
-abstract class Employee(
-    firstName: String,
-    lastName: String,
-    displayName: Option[String],
-    jobTitle: String,
-    photoUrl: URL,
-    email: String,
-    phone: String,
-    division: String,
-    hireDate: LocalDate,
-    mapLocation: (Double, Double),
-    status: Status,
-    active: Boolean,
-    message: Option[String],
-    nickname: String,
-    role: Role,
-    visible: Boolean,
-)
+case class Employee(
+                   firstName: String,
+                   lastName: String,
+                   private val _displayName: Option[String],
+                   jobTitle: String,
+                   photoUrl: URI,
+                   email: String,
+                   phone: String,
+                   division: String,
+                   hireDate: LocalDate,
+                   mapLocation: (Double, Double),
+                   status: Status,
+                   active: Boolean,
+                   message: Option[String],
+                   private val _nickname: Option[String],
+                   role: Role,
+                   visible: Boolean,
+) {
+  def displayName: String = _displayName getOrElse(s"$firstName $lastName")
+  def nickname: String = _nickname getOrElse(firstName)
+}

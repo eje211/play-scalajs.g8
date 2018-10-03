@@ -25,7 +25,13 @@ lazy val client = (project in file("client")).settings(commonSettings)
   scalaJSUseMainModuleInitializer := true,
   libraryDependencies ++= Seq(
     "org.scala-js" %%% "scalajs-dom" % "0.9.5",
-    "com.cibo" %% "leaflet-facade_sjs0.6" % "1.1.0" % "compile" withSources()),
+    "com.cibo" %% "leaflet-facade_sjs0.6" % "1.1.0" % "compile" withSources(),
+    "fr.hmil" %%% "roshttp" % "2.1.0",
+    "io.circe" %%% "circe-core" % "0.10.0",
+    "io.circe" %%% "circe-generic" % "0.10.0",
+    "io.circe" %%% "circe-parser" % "0.10.0",
+    "org.scala-js" %%% "scalajs-java-time" % "0.2.5"
+  ),
   ).enablePlugins(ScalaJSPlugin, ScalaJSWeb).
   dependsOn(sharedJs)
 

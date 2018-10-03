@@ -1,12 +1,11 @@
 package com.regularoddity.status.controllers
 
-import java.net.URL
+import java.net.URI
 import java.time._
 
 import com.regularoddity.status.shared.{Employee, Role, Status}
 import reactivemongo.api.BSONSerializationPack.{Reader, Writer}
 import reactivemongo.bson.{BSONBoolean, BSONDateTime, BSONDocument, BSONReader, BSONWriter}
-
 
 
 object EmployeeSerialization {
@@ -18,7 +17,7 @@ object EmployeeSerialization {
         lastName <- bson.getAs[String]("lastNa  me")
         displayName <- bson.getAs[String]("displayName").map(Some(_))
         jobTitle <- bson.getAs[String]("jobTitle")
-        photoUrl <- bson.getAs[String]("photoUrl").map(new URL(_))
+        photoUrl <- bson.getAs[String]("photoUrl").map(new URI(_))
         email <- bson.getAs[String]("email")
         phone <- bson.getAs[String]("phone")
         division <- bson.getAs[String]("division")
@@ -28,10 +27,10 @@ object EmployeeSerialization {
         status <- bson.getAs[String]("status").map(Status.withName)
         active <- bson.getAs[BSONBoolean]("aclive").map(_.value)
         message <- bson.getAs[String]("message").map(Some(_))
-        nickname <- bson.getAs[String]("nickname")
+        nickname <- bson.getAs[String]("nickname").map(Some(_))
         role <- bson.getAs[String]("role").map(Role.withName)
         visible <- bson.getAs[BSONBoolean]("visible").map(_.value)
-      } yield SerializableEmployee(
+      } yield Employee(
         firstName,
         lastName,
         displayName,
@@ -52,9 +51,9 @@ object EmployeeSerialization {
     }
   }
 
-  implicit object EmployeeWriter extends BSONWriter[SerializableEmployee, BSONDocument]
-      with Writer[SerializableEmployee] {
-    def write(employee: SerializableEmployee): BSONDocument = BSONDocument(
+  implicit object EmployeeWriter extends BSONWriter[Employee, BSONDocument]
+    with Writer[Employee] {
+    def write(employee: Employee): BSONDocument = BSONDocument(
       "firstName" -> employee.firstName,
       "lastName" -> employee.lastName,
       "displayName" -> employee.displayName,
@@ -74,41 +73,5 @@ object EmployeeSerialization {
       "visible" -> employee.visible
     )
   }
-
-
-  case class SerializableEmployee(
-                                   firstName: String,
-                                   lastName: String,
-                                   displayName: Option[String],
-                                   jobTitle: String,
-                                   photoUrl: URL,
-                                   email: String,
-                                   phone: String,
-                                   division: String,
-                                   hireDate: LocalDate,
-                                   mapLocation: (Double, Double),
-                                   status: Status.Status,
-                                   active: Boolean,
-                                   message: Option[String],
-                                   nickname: String,
-                                   role: Role.Role,
-                                   visible: Boolean,
-                                 ) extends Employee(
-    firstName,
-    lastName,
-    displayName,
-    jobTitle,
-    photoUrl,
-    email,
-    phone,
-    division,
-    hireDate,
-    mapLocation,
-    status,
-    active,
-    message,
-    nickname,
-    role,
-    visible)
 
 }

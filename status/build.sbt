@@ -1,5 +1,5 @@
-import sbtcrossproject.{crossProject, CrossType}
-
+// import sbtcrossproject.{crossProject, CrossType}
+import sbtcrossproject.CrossPlugin.autoImport.{crossProject, CrossType}
 
 lazy val server = (project in file("server")).settings(commonSettings).settings(
   scalaJSProjects := Seq(client),
@@ -40,7 +40,7 @@ lazy val extraResolvers = Seq(
   resolvers += Resolver.bintrayRepo("cibotech", "public"),
 )
 
-lazy val commonSettings = Seq(
+lazy val commonSettings: SettingsDefinition = Seq(
   scalaVersion := "2.12.5",
   organization := "com.regularoddity",
 )

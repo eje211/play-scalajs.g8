@@ -37,4 +37,5 @@ case class Employee(
 ) {
   def displayName: String = _displayName getOrElse(s"$firstName $lastName")
   def nickname: String = _nickname getOrElse(firstName)
-}
+  def displayNameIsDefined = _displayName.isDefined
+  def nicknameIsDefined = _nickname.isDefined

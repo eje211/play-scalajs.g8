@@ -7,7 +7,7 @@ import com.regularoddity.status.shared.Role.Role
 import com.regularoddity.status.shared.Status.Status
 import com.regularoddity.status.shared.{Employee, Role, Status}
 import io.circe.Decoder.Result
-import io.circe.{CursorOp, Decoder, DecodingFailure, HCursor}
+import io.circe._
 
 import scala.util.Try
 
@@ -36,7 +36,7 @@ object SerializableEmployee {
         .toEither.left.map(_ => DecodingFailure("Bad URI", CursorOp.MoveRight :: Nil)))
   }
 
-  implicit val decode: Decoder[Employee] = new Decoder[Employee] {
+  implicit val decodeEmployee: Decoder[Employee] = new Decoder[Employee] {
     final def apply(c: HCursor): Decoder.Result[Employee] =
       for {
         firstName <- c.downField("firstName").as[String]
@@ -74,5 +74,29 @@ object SerializableEmployee {
           role,
           visible)
       }
+  }
+
+  implicit val encodeEmployee: Encoder[Employee] = new Encoder[Employee] {
+    def content(employee: Employee): List[(String, Json)] =  List(
+      Some("firstName" -> Json.fromString(employee.firstName)),
+      Some("lastName" -> Json.fromString(employee.lastName)),
+      Some("displayName" -> Json.fromString(employee.displayName)).filter(_ => employee.displayNameIsDefined),
+      Some("jobTitle" -> Json.fromString(employee.jobTitle)),
+      Some("photoUrl" -> Json.fromString(employee.photoUrl.toString)),
+      Some("email" -> Json.fromString(employee.email)),
+      Some("phone" -> Json.fromString(employee.phone)),
+      Some("division" -> Json.fromString(employee.division)),
+      Some("hireDate" -> Json.fromLong(employee.hireDate.toEpochDay * MillisecondsInDay)),
+      Some("mapLocation" -> Json.fromValues(List(employee.mapLocation._1, employee.mapLocation._2)
+        .flatMap(coordinate => Json.fromDouble(coordinate)))),
+      Some("status" -> Json.fromString(employee.status.toString)),
+      Some("active" -> Json.fromBoolean(employee.active)),
+      employee.message.map(message => "message" -> Json.fromString(message)),
+      Some("nickname" -> Json.fromString(employee.nickname)).filter(_ => employee.nicknameIsDefined),
+      Some("role" -> Json.fromString(employee.role.toString)),
+      Some("visible" -> Json.fromBoolean(employee.visible))
+    ).flatten
+
+    final def apply(employee: Employee): Json = Json.obj(content(employee):_*)
   }
 }

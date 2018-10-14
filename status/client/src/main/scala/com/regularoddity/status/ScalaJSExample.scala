@@ -26,19 +26,9 @@ object ScalaJSExample {
     "el" -> "#app",
   ))
 
-  private val leafletJS = Leaflet.map("map", LMapOptions
-    .jsOpt("crs", CRS.Simple)
-    .jsOpt("maxZoom", 2)
-    .jsOpt("zoomSnap", 0.25)
-    .jsOpt("zoomDelta", 0.25)
-    .jsOpt("maxBounds", LatLngBounds(LatLng(-20, -20), LatLng(601, 880))).build)
-
   def main(args: Array[String]): Unit = {
-    Leaflet.imageOverlay( s"${dom.document.location.protocol}//${dom.document.location.host}"
-      + "/assets/images/sample-office-plan.jpg",
-      LatLngBounds(LatLng(0, 0), LatLng(581, 860))).addTo(leafletJS)
-    leafletJS.setView(LatLng(290, 430), 1)
-
+    scala.scalajs.js.eval("L.Icon.Default.imagePath = '/assets/images/';")
+    Map.configureMap()
     DataHolder.getEmployeeData()
   }
 

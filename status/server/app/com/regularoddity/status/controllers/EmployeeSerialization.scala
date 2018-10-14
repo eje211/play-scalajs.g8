@@ -4,8 +4,9 @@ import java.net.URI
 import java.time._
 
 import com.regularoddity.status.shared.{Employee, Role, Status}
+import play.api.libs.json.{JsResult, JsValue, Reads}
 import reactivemongo.api.BSONSerializationPack.{Reader, Writer}
-import reactivemongo.bson.{BSONBoolean, BSONDateTime, BSONDocument, BSONReader, BSONWriter}
+import reactivemongo.bson.{BSONBoolean, BSONDateTime, BSONDocument, BSONObjectID, BSONReader, BSONWriter}
 
 
 object EmployeeSerialization {
@@ -30,6 +31,7 @@ object EmployeeSerialization {
         nickname <- bson.getAs[String]("nickname").map(Some(_))
         role <- bson.getAs[String]("role").map(Role.withName)
         visible <- bson.getAs[BSONBoolean]("visible").map(_.value)
+        id <- bson.getAs[String]("_id").map(Some(_))
       } yield Employee(
         firstName,
         lastName,
@@ -47,6 +49,7 @@ object EmployeeSerialization {
         nickname,
         role,
         visible,
+        id,
       )
     }
   }
@@ -70,7 +73,49 @@ object EmployeeSerialization {
       "message" -> employee.message,
       "nickname" -> employee.nickname,
       "role" -> employee.role.toString,
-      "visible" -> employee.visible
+      "visible" -> employee.visible,
+      "_id" -> employee.id.flatMap(id => BSONObjectID.parse(id).toOption)
+    )
+  }
+
+  implicit object ReadsEmployee extends Reads[Employee] {
+    override def reads(json: JsValue): JsResult[Employee] = for {
+      firstName <- json("firstName").validate[String]
+      lastName <- json("lastNa  me").validate[String]
+      displayName <- json("displayName").validateOpt[String]
+      jobTitle <- json("jobTitle").validate[String]
+      photoUrl <- json("photoUrl").validate[String].map(new URI(_))
+      email <- json("email").validate[String]
+      phone <- json("phone").validate[String]
+      division <- json("division").validate[String]
+      hireDate <- json("hireDate").validate[Long].map(d =>
+        Instant.ofEpochMilli(d).atZone(ZoneId.of("Etc/UTC")).toLocalDate)
+      mapLocation <- json("mapLocation").validate[List[Double]].map(l => (l(0), l(1)))
+      status <- json("status").validate[String].map(Status.withName)
+      active <- json("aclive").validate[Boolean]
+      message <- json("message").validateOpt[String]
+      nickname <- json("nickname").validateOpt[String]
+      role <- json("role").validate[String].map(Role.withName)
+      visible <- json("visible").validate[Boolean]
+      id <- json("_id").validateOpt[String]
+    } yield Employee(
+      firstName,
+      lastName,
+      displayName,
+      jobTitle,
+      photoUrl,
+      email,
+      phone,
+      division,
+      hireDate,
+      mapLocation,
+      status,
+      active,
+      message,
+      nickname,
+      role,
+      visible,
+      id,
     )
   }
 

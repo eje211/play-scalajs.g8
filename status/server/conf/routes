@@ -7,6 +7,7 @@ GET        /                             com.regularoddity.status.controllers.Ap
 # REST data
 GET        /data                         com.regularoddity.status.controllers.GetData.get
 GET        /new                          com.regularoddity.status.controllers.GetData.makeNew
+POST       /updatePin                    com.regularoddity.status.controllers.GetData.updatePin
 
 # Prefix must match `play.assets.urlPrefix`
 GET        /assets/*file                 controllers.Assets.at(file)

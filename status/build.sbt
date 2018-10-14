@@ -1,6 +1,8 @@
 // import sbtcrossproject.{crossProject, CrossType}
 import sbtcrossproject.CrossPlugin.autoImport.{crossProject, CrossType}
 
+// unmanagedBase := baseDirectory.value / "lib"
+
 lazy val server = (project in file("server")).settings(commonSettings).settings(
   scalaJSProjects := Seq(client),
   pipelineStages in Assets := Seq(scalaJSPipeline),

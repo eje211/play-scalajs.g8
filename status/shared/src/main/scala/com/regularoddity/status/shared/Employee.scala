@@ -34,12 +34,31 @@ case class Employee(
                    private val _nickname: Option[String],
                    role: Role,
                    visible: Boolean,
+                   id: Option[String]
 ) {
-  def displayName: String = _displayName getOrElse (s"$firstName $lastName")
+  def displayName: String = _displayName getOrElse s"$firstName $lastName"
 
-  def nickname: String = _nickname getOrElse (firstName)
+  def nickname: String = _nickname getOrElse firstName
 
+  /**
+    * Used for serialization.
+    * @return whether the private member _displayName is defined.
+    */
   def displayNameIsDefined = _displayName.isDefined
 
+  /**
+    * Used for serialization.
+    * @return whether the private member _nickname is defined.
+    */
   def nicknameIsDefined = _nickname.isDefined
+
+  def canDrag = role >= Employee.MininumDraggableRole
+
+  def mapLocationL = mapLocation._1 :: mapLocation._2 :: Nil
+
+  def mapLocationA = Array(mapLocation._1, mapLocation._2)
+}
+
+object Employee {
+  val MininumDraggableRole = Role.editor
 }

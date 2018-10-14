@@ -32,11 +32,12 @@ object DataHolder {
       ).getOrElse(Nil)
     })
 
-  def getEmployeeData() = {
+  def getEmployeeData(): Unit = {
     requestToEmployees(request)
       .onComplete({
         case employeesResult: Success[List[Employee]] =>
           employees = employeesResult.value
+          employees foreach {e => Map addPin e}
         case _: Failure[List[Employee]] => "Something went wrong."
         case _ => println("Something else")
       })

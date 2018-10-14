@@ -55,6 +55,7 @@ object SerializableEmployee {
         nickname <- c.downField("nickname").as[Option[String]]
         role <- c.downField("role").as[Role]
         visible <- c.downField("visible").as[Boolean]
+        id <- c.downField("_id").downField("$oid").as[Option[String]]
       } yield {
         Employee(
           firstName,
@@ -72,7 +73,9 @@ object SerializableEmployee {
           message,
           nickname,
           role,
-          visible)
+          visible,
+          id,
+        )
       }
   }
 
@@ -94,7 +97,8 @@ object SerializableEmployee {
       employee.message.map(message => "message" -> Json.fromString(message)),
       Some("nickname" -> Json.fromString(employee.nickname)).filter(_ => employee.nicknameIsDefined),
       Some("role" -> Json.fromString(employee.role.toString)),
-      Some("visible" -> Json.fromBoolean(employee.visible))
+      Some("visible" -> Json.fromBoolean(employee.visible)),
+      employee.id.map(id => "_id" -> Json.fromString(id))
     ).flatten
 
     final def apply(employee: Employee): Json = Json.obj(content(employee):_*)

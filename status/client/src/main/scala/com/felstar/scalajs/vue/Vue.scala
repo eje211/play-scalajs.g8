@@ -8,6 +8,7 @@ package com.felstar.scalajs.vue
 
 import scala.scalajs.js
 import org.scalajs.dom._
+import org.scalajs.dom.raw.HTMLElement
 
 import js.annotation.{JSGlobal, JSName}
 
@@ -104,6 +105,10 @@ class Vue extends js.Object {
   def $addChild(options: js.Any, constructor: js.Function): Unit = js.native
 
   def $addChild(constructor: js.Function): Unit = js.native
+
+  def extend(obj: js.Any): js.Function1[js.Any, Vue] = js.native
+
+  def $forceUpdate(): js.Any = js.native
 }
 
 @js.native
@@ -116,8 +121,6 @@ class Unwatch extends js.Object {
 @JSGlobal("Vue")
 object Vue extends js.Object {
   def config: js.Dynamic = js.native
-
-  def extend(obj: js.Any): Vue = js.native
 
   def nextTick(func: js.Function): Unit = js.native
 
@@ -154,6 +157,10 @@ object Vue extends js.Object {
   def set(target: js.Any, key: js.Any, value: js.Any): Unit = js.native
 
   def delete(target: js.Any, key: js.Any): Unit = js.native
+
+  def compile(component: String): HTMLElement = js.native
+
+  def extend(obj: js.Any): js.Function1[js.Any, Vue] = js.native
 }
 
 @js.native
@@ -166,4 +173,10 @@ class Directive extends js.Object {
   val modifiers: js.Any = js.native
   val `def`: js.Any = js.native
 }
+
+
+class ExtendedVueFunction1() extends js.Function1[js.Any, Vue] {
+  override def apply(arg1: js.Any): Vue = js.native
+}
+
 

@@ -1,25 +1,29 @@
 package com.regularoddity.status
 
 import com.regularoddity.status.shared.Employee
+import com.regularoddity.status.SerializableEmployee.toJS
 import monix.execution.Scheduler.Implicits.global
 import fr.hmil.roshttp.HttpRequest
 import io.circe.Json
 import io.circe.parser.parse
 import org.scalajs.dom
 
+import scala.collection.mutable
 import scala.concurrent.Future
+import scala.scalajs.js
+import scala.scalajs.js.annotation.{JSExport, JSExportTopLevel}
 import scala.util.{Failure, Success}
 
+
+@JSExportTopLevel("DataHolder")
 object DataHolder {
   import SerializableEmployee._
 
-  private var _employees = Vector.empty[Employee]
+  @JSExport
+  val employees = mutable.Map.empty[String, Employee]
 
-  def employees = _employees
-
-  def employees_=(employees: Vector[Employee]) = _employees = employees
-
-  def employees_=(employees: List[Employee]) = _employees = employees.toVector
+  @JSExport
+  val employeesJs = js.Dictionary[Any]()
 
   private val request = HttpRequest(s"//${dom.document.location.host}/data")
 
@@ -36,8 +40,18 @@ object DataHolder {
     requestToEmployees(request)
       .onComplete({
         case employeesResult: Success[List[Employee]] =>
-          employees = employeesResult.value
-          employees foreach {e => Map addPin e}
+          employees.empty
+          employeesResult.value.filter(_.id.isDefined) foreach { employee => {
+            employees(employee.id.get) = employee
+            Map addPin employee
+          }}
+          employeesJs.empty
+          try {
+            employees.filter(employee => employee._2.id.isDefined).map(employee => toJS(employee._2)).map(e =>
+              e.get("id").map(_.asInstanceOf[String]).foreach(key => employeesJs.update(key, e)))
+          } catch {
+            case e: Exception => dom.console.error(e.getMessage)
+          }
         case _: Failure[List[Employee]] => "Something went wrong."
         case _ => println("Something else")
       })

@@ -1,5 +1,7 @@
 package com.cibo.leaflet
 
+import org.scalajs.dom.raw.HTMLElement
+
 import scala.scalajs.js
 import scala.scalajs.js.annotation.JSGlobal
 
@@ -8,7 +10,7 @@ import scala.scalajs.js.annotation.JSGlobal
 @JSGlobal("L.CRS")
 class CRS extends js.Object {
 
-  def latLngToPoint(latLng: LatLng, zoon: Number): Point = js.native
+  def latLngToPoint(latLng: LatLng, zoom: Number): Point = js.native
 
   def pointToLatLng(point: Point, zoom: Number): LatLng = js.native
 
@@ -47,3 +49,17 @@ class CRS extends js.Object {
 @js.native
 @JSGlobal("L.CRS")
 object CRS extends CRS
+
+@JSGlobal("L.Layer")
+@js.native
+class MarkerAddendum extends Marker {
+  def bindPopup(content: String) {
+    js.native
+  }
+  def bindPopup(content: String, options: js.Dictionary[js.Any]) {
+    js.native
+  }
+  def bindPopup(content: HTMLElement, options: js.Dictionary[js.Any]) {
+    js.native
+  }
+}

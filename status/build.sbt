@@ -26,6 +26,7 @@ lazy val client = (project in file("client")).settings(commonSettings)
     .settings(
   scalaJSUseMainModuleInitializer := true,
   libraryDependencies ++= Seq(
+    "org.scala-lang.modules" %%% "scala-xml" % "1.1.0",
     "org.scala-js" %%% "scalajs-dom" % "0.9.5",
     "com.cibo" %% "leaflet-facade_sjs0.6" % "1.1.0" % "compile" withSources(),
     "fr.hmil" %%% "roshttp" % "2.1.0",

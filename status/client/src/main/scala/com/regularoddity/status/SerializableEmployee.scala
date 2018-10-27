@@ -9,11 +9,12 @@ import com.regularoddity.status.shared.{Employee, Role, Status}
 import io.circe.Decoder.Result
 import io.circe._
 
+import scala.scalajs.js
 import scala.util.Try
 
 
 object SerializableEmployee {
-  private val MillisecondsInDay = 1000 * 60 * 60 * 24
+  val MillisecondsInDay = 1000 * 60 * 60 * 24
 
   implicit val decodeDate: Decoder[LocalDate] = new Decoder[LocalDate] {
     final def apply(c: HCursor): Result[LocalDate] =
@@ -103,4 +104,24 @@ object SerializableEmployee {
 
     final def apply(employee: Employee): Json = Json.obj(content(employee):_*)
   }
+
+  implicit def toJS(employee: Employee): js.Dictionary[js.Any] = js.Dictionary[js.Any](
+    "firstName" -> employee.firstName,
+    "lastName" -> employee.lastName,
+    "displayName" -> employee.displayName,
+    "jobTitle" -> employee.jobTitle,
+    "photoUrl" -> employee.photoUrl.toString,
+    "email" -> employee.email,
+    "phone" -> employee.phone,
+    "division" -> employee.division,
+    "hireDate" -> new js.Date(employee.hireDate.toEpochDay * MillisecondsInDay),
+    "mapLocation" -> js.Array(employee.mapLocation._1, employee.mapLocation._2),
+    "status" -> employee.status.toString,
+    "active" -> employee.active,
+    "message" -> (employee.message.map(_.asInstanceOf[js.Any]) getOrElse js.undefined),
+    "nickname" -> employee.nickname,
+    "role" -> employee.role.toString,
+    "visible" -> employee.visible,
+    "id" -> employee.id.map(_.toString.asInstanceOf[js.Any]).getOrElse(js.undefined)
+  )
 }
